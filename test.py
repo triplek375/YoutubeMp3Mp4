@@ -1,15 +1,18 @@
 import yt_dlp
+import os
 
-def download_youtube_video(url, resolution='1080', output_path='.'):
+def download_youtube_video(url, resolution):
+    downloads_path = os.path.join(os.path.expanduser('~'), 'Downloads')
+    
     ydl_opts = {
-        # Selects the best video up to the specified height, plus the best audio
         'format': f'bestvideo[height<={resolution}][ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
-        'outtmpl': f'{output_path}/%(title)s.%(ext)s',
+        'outtmpl': os.path.join(downloads_path, '%(title)s.%(ext)s'),
         'merge_output_format': 'mp4',
         'quiet': False, 
     }
 
     try:
+        print(f"Destination: {downloads_path}")
         print(f"Downloading: {url} at up to {resolution}p...")
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
